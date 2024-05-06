@@ -108,15 +108,14 @@ function App() {
   }, [board]);
 
   // AI Moves
-
   useEffect(() => {
     if (moveCounter > 0 && _.isNull(win.current)) handleAIMove();
     // eslint-disable-next-line
   }, [moveCounter]);
 
-  const handlePlayer1Move = (placement) => {
-    if (_.isNull(board[placement]?.marker)) {
-      dispatch(successMarker({ id: placement, marker: "player1" }));
+  const handleMarker = (data) => {
+    if (_.isNull(data?.marker)) {
+      dispatch(successMarker({ ...data, marker: "player1" }));
       setMoveCounter((prev) => prev + 1);
     }
   };
@@ -126,7 +125,7 @@ function App() {
     while (i < 99) {
       let rand = Math.floor(Math.random() * 9);
       if (_.isNull(board[rand]?.marker)) {
-        dispatch(successMarker({ id: rand, marker: "player2" }));
+        dispatch(successMarker({ ...board[rand], marker: "player2" }));
         break;
       }
       i++;
@@ -139,7 +138,7 @@ function App() {
         <Box display="flex" justifyContent="center">
           <Typography variant="h3">Tic-Tac-Toe</Typography>
         </Box>
-        <Board board={board} handlePlayer1Move={handlePlayer1Move} />
+        <Board board={board} handleMarker={handleMarker} />
         <Box display="flex" justifyContent="center">
           <Button variant="contained" onClick={handleResetBoard}>
             Reset

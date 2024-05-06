@@ -2,15 +2,40 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   board: [
-    { id: 0, marker: null },
-    { id: 1, marker: null },
-    { id: 2, marker: null },
-    { id: 3, marker: null },
-    { id: 4, marker: null },
-    { id: 5, marker: null },
-    { id: 6, marker: null },
-    { id: 7, marker: null },
-    { id: 8, marker: null },
+    {
+      id: 0,
+      marker: null,
+      borderRight: 0,
+      borderTop: "2px solid rgba(0, 0, 0, 1)",
+    },
+    {
+      id: 1,
+      marker: null,
+      borderRight: 0,
+      borderTop: "2px solid rgba(0, 0, 0, 1)",
+    },
+    {
+      id: 2,
+      marker: null,
+      borderRight: "2px solid rgba(0, 0, 0, 1)",
+      borderTop: "2px solid rgba(0, 0, 0, 1)",
+    },
+    { id: 3, marker: null, borderRight: 0, borderTop: 0 },
+    { id: 4, marker: null, borderRight: 0, borderTop: 0 },
+    {
+      id: 5,
+      marker: null,
+      borderRight: "2px solid rgba(0, 0, 0, 1)",
+      borderTop: 0,
+    },
+    { id: 6, marker: null, borderRight: 0, borderTop: 0 },
+    { id: 7, marker: null, borderRight: 0, borderTop: 0 },
+    {
+      id: 8,
+      marker: null,
+      borderRight: "2px solid rgba(0, 0, 0, 1)",
+      borderTop: 0,
+    },
   ],
 };
 
