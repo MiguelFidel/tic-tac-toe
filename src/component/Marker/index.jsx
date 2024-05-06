@@ -20,7 +20,7 @@ function Marker({ isMarked }) {
       {_.isEqual(isMarked, "player1") ? (
         <RadioButtonUncheckedIcon sx={{ fontSize: "15em" }} />
       ) : _.isEqual(isMarked, "player2") ? (
-        <CloseIcon sx={{ fontSize: "15em" }} />
+        <CloseIcon sx={{ fontSize: "15em" }} color="error" />
       ) : null}
     </StyledBox>
   );

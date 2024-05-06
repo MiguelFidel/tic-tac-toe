@@ -1,10 +1,10 @@
 import React, { memo } from "react";
 import { Grid, Stack, styled, Button, Box } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import Marker from "../Marker";
 
 const StyledBox = styled(Button)({
   border: "2px solid rgba(0, 0, 0, 1)",
+  borderRadius: "0px",
   height: "15em",
   width: "15em",
   ":hover": {
@@ -26,15 +26,15 @@ function Board({ board, handlePlayer1Move }) {
             </StyledBox>
           </Grid>
           <Grid item>
-            <StyledBox onClick={() => handlePlayer1Move(1)}>
+            <StyledBox
+              onClick={() => handlePlayer1Move(1)}
+              sx={{ borderRight: 0 }}
+            >
               <Marker isMarked={board[1]?.marker} />
             </StyledBox>
           </Grid>
           <Grid item>
-            <StyledBox
-              sx={{ borderLeft: 0 }}
-              onClick={() => handlePlayer1Move(2)}
-            >
+            <StyledBox onClick={() => handlePlayer1Move(2)}>
               <Marker isMarked={board[2]?.marker} />
             </StyledBox>
           </Grid>
