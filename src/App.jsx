@@ -9,12 +9,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { successMarker, reset } from "./store/reducers/board";
 
 import Board from "./component/Board";
-import { Alert } from "./component/Alert";
 
 function App() {
   const dispatch = useDispatch();
   const { board } = useSelector((state) => state.board);
   const [moveCounter, setMoveCounter] = useState(0);
+  const [winTile, setWinTile] = useState([]);
 
   const win = useRef(null);
 
@@ -32,12 +32,10 @@ function App() {
     handleCheckRightDiagonalWin("X");
 
     // Draw
-    if (_.isEqual(moveCounter, 5) && _.isNull(win.current))
-      Alert.fire().then((result) => {
-        if (result.isConfirmed) {
-          handleResetBoard();
-        }
-      });
+    if (_.isEqual(moveCounter, 5) && _.isNull(win.current)) {
+      win.current = "Draw";
+      setWinTile([]);
+    }
     // eslint-disable-next-line
   }, [board]);
 
@@ -51,15 +49,8 @@ function App() {
   const handleResetBoard = () => {
     dispatch(reset());
     setMoveCounter(0);
+    setWinTile([]);
     win.current = null;
-  };
-
-  const handlePopUp = () => {
-    Alert.fire({ title: `${_.startCase(win.current)} Win!` }).then((result) => {
-      if (result.isConfirmed) {
-        handleResetBoard();
-      }
-    });
   };
 
   const handleCheckHorizontalWin = (marker) => {
@@ -70,7 +61,7 @@ function App() {
         board[i + 2].marker === marker
       ) {
         win.current = marker;
-        handlePopUp();
+        setWinTile([i, i + 1, i + 2]);
         break;
       }
     }
@@ -84,7 +75,7 @@ function App() {
         board[i + 6]?.marker === marker
       ) {
         win.current = marker;
-        handlePopUp();
+        setWinTile([i, i + 3, i + 6]);
         break;
       }
     }
@@ -97,7 +88,7 @@ function App() {
       board[8]?.marker === marker
     ) {
       win.current = marker;
-      handlePopUp();
+      setWinTile([0, 4, 8]);
     }
   };
 
@@ -108,12 +99,12 @@ function App() {
       board[6]?.marker === marker
     ) {
       win.current = marker;
-      handlePopUp();
+      setWinTile([2, 4, 6]);
     }
   };
 
   const handleMarker = (data) => {
-    if (_.isNull(data?.marker)) {
+    if (_.isNull(data?.marker) && _.isNull(win.current)) {
       dispatch(successMarker({ ...data, marker: "O" }));
       setMoveCounter((prev) => prev + 1);
     }
@@ -135,7 +126,14 @@ function App() {
         <Box display="flex" justifyContent="center">
           <Typography variant="h3">Tic-Tac-Toe</Typography>
         </Box>
-        <Board board={board} handleMarker={handleMarker} />
+        <Board board={board} handleMarker={handleMarker} winTile={winTile} />
+        <Box display="flex" justifyContent="center" sx={{ height: "2em" }}>
+          {!_.isNull(win.current) && (
+            <Typography variant="h5">
+              {win.current !== "Draw" ? `"${win.current}" win!` : win.current}
+            </Typography>
+          )}
+        </Box>
         <Box display="flex" justifyContent="center">
           <Button variant="contained" onClick={handleResetBoard}>
             Reset
