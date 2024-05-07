@@ -17,9 +17,9 @@ const StyledBox = styled(Box)({
 function Marker({ isMarked }) {
   return (
     <StyledBox>
-      {_.isEqual(isMarked, "player1") ? (
+      {_.isEqual(isMarked, "O") ? (
         <RadioButtonUncheckedIcon sx={{ fontSize: "15em" }} color="primary" />
-      ) : _.isEqual(isMarked, "player2") ? (
+      ) : _.isEqual(isMarked, "X") ? (
         <CloseIcon sx={{ fontSize: "15em" }} color="error" />
       ) : null}
     </StyledBox>

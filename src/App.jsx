@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { successMarker, reset } from "./store/reducers/board";
 
 import Board from "./component/Board";
-import { PlayerWin, Draw } from "./component/Alert";
+import { Alert } from "./component/Alert";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,88 +18,22 @@ function App() {
 
   const win = useRef(null);
 
-  const handleResetBoard = () => {
-    dispatch(reset());
-    setMoveCounter(0);
-    win.current = null;
-  };
-
-  const handlePopUp = () => {
-    PlayerWin.fire({ title: `${_.startCase(win.current)} Win!` }).then(
-      (result) => {
-        if (result.isConfirmed) {
-          handleResetBoard();
-        }
-      }
-    );
-  };
-
-  const handleCheckHorizontalWin = (player) => {
-    for (let i = 0; i < 9; i = i + 3) {
-      if (
-        board[i].marker === player &&
-        board[i + 1].marker === player &&
-        board[i + 2].marker === player
-      ) {
-        win.current = player;
-        handlePopUp();
-        break;
-      }
-    }
-  };
-
-  const handleCheckVerticalWin = (player) => {
-    for (let i = 0; i < 3; i++) {
-      if (
-        board[i]?.marker === player &&
-        board[i + 3]?.marker === player &&
-        board[i + 6]?.marker === player
-      ) {
-        win.current = player;
-        handlePopUp();
-        break;
-      }
-    }
-  };
-
-  const handleCheckLeftDiagonalWin = (player) => {
-    if (
-      board[0]?.marker === player &&
-      board[4]?.marker === player &&
-      board[8]?.marker === player
-    ) {
-      win.current = player;
-      handlePopUp();
-    }
-  };
-
-  const handleCheckRightDiagonalWin = (player) => {
-    if (
-      board[2]?.marker === player &&
-      board[4]?.marker === player &&
-      board[6]?.marker === player
-    ) {
-      win.current = player;
-      handlePopUp();
-    }
-  };
-
   useEffect(() => {
-    // Player 1 winning
-    handleCheckHorizontalWin("player1");
-    handleCheckVerticalWin("player1");
-    handleCheckLeftDiagonalWin("player1");
-    handleCheckRightDiagonalWin("player1");
+    // O winning
+    handleCheckHorizontalWin("O");
+    handleCheckVerticalWin("O");
+    handleCheckLeftDiagonalWin("O");
+    handleCheckRightDiagonalWin("O");
 
-    // Player 2 winning
-    handleCheckHorizontalWin("player2");
-    handleCheckVerticalWin("player2");
-    handleCheckLeftDiagonalWin("player2");
-    handleCheckRightDiagonalWin("player2");
+    // X winning
+    handleCheckHorizontalWin("X");
+    handleCheckVerticalWin("X");
+    handleCheckLeftDiagonalWin("X");
+    handleCheckRightDiagonalWin("X");
 
     // Draw
     if (_.isEqual(moveCounter, 5) && _.isNull(win.current))
-      Draw.fire().then((result) => {
+      Alert.fire().then((result) => {
         if (result.isConfirmed) {
           handleResetBoard();
         }
@@ -109,26 +43,89 @@ function App() {
 
   // AI Moves
   useEffect(() => {
-    if (moveCounter > 0 && _.isNull(win.current)) handleAIMove();
+    if (moveCounter > 0 && moveCounter < 5 && _.isNull(win.current))
+      handleAIMove();
     // eslint-disable-next-line
   }, [moveCounter]);
 
+  const handleResetBoard = () => {
+    dispatch(reset());
+    setMoveCounter(0);
+    win.current = null;
+  };
+
+  const handlePopUp = () => {
+    Alert.fire({ title: `${_.startCase(win.current)} Win!` }).then((result) => {
+      if (result.isConfirmed) {
+        handleResetBoard();
+      }
+    });
+  };
+
+  const handleCheckHorizontalWin = (marker) => {
+    for (let i = 0; i < 9; i = i + 3) {
+      if (
+        board[i].marker === marker &&
+        board[i + 1].marker === marker &&
+        board[i + 2].marker === marker
+      ) {
+        win.current = marker;
+        handlePopUp();
+        break;
+      }
+    }
+  };
+
+  const handleCheckVerticalWin = (marker) => {
+    for (let i = 0; i < 3; i++) {
+      if (
+        board[i]?.marker === marker &&
+        board[i + 3]?.marker === marker &&
+        board[i + 6]?.marker === marker
+      ) {
+        win.current = marker;
+        handlePopUp();
+        break;
+      }
+    }
+  };
+
+  const handleCheckLeftDiagonalWin = (marker) => {
+    if (
+      board[0]?.marker === marker &&
+      board[4]?.marker === marker &&
+      board[8]?.marker === marker
+    ) {
+      win.current = marker;
+      handlePopUp();
+    }
+  };
+
+  const handleCheckRightDiagonalWin = (marker) => {
+    if (
+      board[2]?.marker === marker &&
+      board[4]?.marker === marker &&
+      board[6]?.marker === marker
+    ) {
+      win.current = marker;
+      handlePopUp();
+    }
+  };
+
   const handleMarker = (data) => {
     if (_.isNull(data?.marker)) {
-      dispatch(successMarker({ ...data, marker: "player1" }));
+      dispatch(successMarker({ ...data, marker: "O" }));
       setMoveCounter((prev) => prev + 1);
     }
   };
 
   const handleAIMove = () => {
-    let i = 0;
-    while (i < 99) {
+    while (true) {
       let rand = Math.floor(Math.random() * 9);
       if (_.isNull(board[rand]?.marker)) {
-        dispatch(successMarker({ ...board[rand], marker: "player2" }));
+        dispatch(successMarker({ ...board[rand], marker: "X" }));
         break;
       }
-      i++;
     }
   };
 
