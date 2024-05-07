@@ -27,10 +27,7 @@ function Board({ board, winTile, handleMarker }) {
                   ? "#5cb85c"
                   : "#fff",
                 ":hover": {
-                  background: _.some(
-                    winTile,
-                    (value) => value.toString() === index.toString()
-                  )
+                  background: _.some(winTile, (value) => value === index)
                     ? "#5cb85c"
                     : "#d3d3d3",
                 },
